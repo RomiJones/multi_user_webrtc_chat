@@ -112,7 +112,7 @@
                         if (MUTE_AUDIO_BY_DEFAULT) {
                             remote_media.attr("muted", "true");
                         }
-                        //remote_media.attr("controls", "");
+                        remote_media.attr("controls", "");
                         peer_media_elements[peer_id] = remote_media;
                         $('body').append(remote_media);
                         attachMediaStream(remote_media[0], event.stream);
@@ -251,7 +251,7 @@
                         var local_media = USE_VIDEO ? $("<video>") : $("<audio>");
 						local_media.attr("autoplay", "autoplay");
                         local_media.attr("muted", "true"); 	// always mute ourselves by default
-                        //local_media.attr("controls", "");
+                        local_media.attr("controls", "");
                         $('body').append(local_media);
                         attachMediaStream(local_media[0], stream);
 
@@ -266,4 +266,3 @@
     </head>
     <body onload='init()'></body>
 </html>
-              
