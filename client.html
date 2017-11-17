@@ -25,7 +25,7 @@
             var SIGNALING_SERVER = pro_prefix + "192.168.198.197:" + server_port;
             var USE_AUDIO = true;
             var USE_VIDEO = true;
-            var DEFAULT_CHANNEL = 'some-global-channel-name';
+            var DEFAULT_ROOMID = '001';
             var MUTE_AUDIO_BY_DEFAULT = false;
             var ICE_SERVERS = [{url:"stun:stun.l.google.com:19302"}];
 			var PC_CONFIGURATION = {"iceServers": ICE_SERVERS};
@@ -36,9 +36,9 @@
         </script>
 
         <script>
-            var signaling_socket = null;   /* our socket.io connection to our webserver */
+            var signaling_socket = null;
             var local_media_stream = null; /* our own microphone / webcam */
-            var peers = {};                /* keep track of our peer connections, indexed by peer_id (aka socket.io id) */
+            var peers = {};
             var peer_media_elements = {};  /* keep track of our <video>/<audio> tags, indexed by peer_id */
 
             function init() {
@@ -49,9 +49,7 @@
                 signaling_socket.on('connect', function() {
                     console.log("Connected to signaling server");
                     setup_local_media(function() {
-                        /* once the user has given us access to their microphone/camcorder, 
-						 * join the channel and start peering up */
-                        join_chat_channel(DEFAULT_CHANNEL, {'whatever-you-want-here': 'stuff'});
+                        join_chat_room(DEFAULT_ROOMID, {'whatever-you-want-here': 'stuff'});
                     });
                 });
                 signaling_socket.on('disconnect', function() {
@@ -68,20 +66,13 @@
                     peers = {};
                     peer_media_elements = {};
                 });
-                function join_chat_channel(channel, userdata) {
-                    signaling_socket.emit('join', {"channel": channel, "userdata": userdata});
+                function join_chat_room(room_id, userdata) {
+                    signaling_socket.emit('join', {"roomid":room_id, "userdata": userdata});
                 }
-                function part_chat_channel(channel) {
-                    signaling_socket.emit('part', channel);
+                function leave_chat_room(room_id) {
+                    signaling_socket.emit('leave', room_id);
                 }
 
-
-                /** 
-                * When we join a group, our signaling server will send out 'addPeer' events to each pair
-                * of users in the group (creating a fully-connected graph of users, ie if there are 6 people
-                * in the channel you will connect directly to the other 5, so there will be a total of 15 
-                * connections in the network). 
-                */
                 signaling_socket.on('addPeer', function(config) {
                     console.log('Signaling server said to add peer:', config);
                     var peer_id = config.peer_id;
@@ -112,7 +103,7 @@
                         if (MUTE_AUDIO_BY_DEFAULT) {
                             remote_media.attr("muted", "true");
                         }
-                        remote_media.attr("controls", "");
+                        //remote_media.attr("controls", "");
                         peer_media_elements[peer_id] = remote_media;
                         $('body').append(remote_media);
                         attachMediaStream(remote_media[0], event.stream);
@@ -251,7 +242,7 @@
                         var local_media = USE_VIDEO ? $("<video>") : $("<audio>");
 						local_media.attr("autoplay", "autoplay");
                         local_media.attr("muted", "true"); 	// always mute ourselves by default
-                        local_media.attr("controls", "");
+                        //local_media.attr("controls", "");
                         $('body').append(local_media);
                         attachMediaStream(local_media[0], stream);
 
@@ -266,3 +257,4 @@
     </head>
     <body onload='init()'></body>
 </html>
+

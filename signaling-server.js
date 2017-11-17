@@ -32,68 +32,61 @@ app.use("/static", express.static(path.join(__dirname, "webstatic")));
 var io = require('socket.io').listen(httpServer);
 var io_ssl = require('socket.io').listen(httpsServer);
 
-var channels = {};
+var allrooms = {};
 var sockets = {};
 var theHandler = function (socket) {
     console.log("["+ socket.id + "] connection accepted");
 	
-	socket.channels = {};		//本socket新增一个channels属性,保存socket加入到全部channel的名称
+    socket.room_id = "unkown";  //本socket加入的房间号
     sockets[socket.id] = socket;//本socket加入全局sockets
     
     socket.on('disconnect', function () {
-        for (var channel in socket.channels) {
-            part(channel);
-        }
         console.log("["+ socket.id + "] disconnected");
+        leave(socket.room_id)
         delete sockets[socket.id];
     });
 
     socket.on('join', function (config) {
         console.log("["+ socket.id + "] join ", config);
 		
-        var channel = config.channel;
+        var room_id = config.roomid.toString();
         var userdata = config.userdata;
 
-        if (channel in socket.channels) {
-            console.log("["+ socket.id + "] ERROR: already joined ", channel);
-            return;
+        socket.room_id = room_id;
+		
+		//这个socket要加入的room_id名的插入全局allrooms
+        if(!(room_id in allrooms)){
+            allrooms[room_id] = {};
         }
 		
-		//这个socket要加入的channel名的插入全局channels，channel有点类似room的概念
-        if (!(channel in channels)) {
-            channels[channel] = {};
-        }
-		
-		//同一个channel(同一个room)中的
-        for (id in channels[channel]) {
+		//同一个room中的
+        for (tmp_s_id in allrooms[room_id]) {
 			//对n-1个端(除了己端)都发送addPeer命令，要求每个端都建立peerconnect，用于等待接收offer
 			//对应于每个端，也对己端发送addPeer命令,发送n-1个，准备发起createOffer
-            channels[channel][id].emit('addPeer', {'peer_id': socket.id, 'should_create_offer': false});
-            socket.emit('addPeer', {'peer_id': id, 'should_create_offer': true});
+            allrooms[room_id][tmp_s_id].emit('addPeer', {'peer_id': socket.id, 'should_create_offer': false});
+            socket.emit('addPeer', {'peer_id': tmp_s_id, 'should_create_offer': true});
         }
 		
-        channels[channel][socket.id] = socket;  //在channel中保存join到此channel的全部用户的socket，在服务端socket.id唯一标识一个用户
-        socket.channels[channel] = channel;		
+        //保存join到此room的全部用户的socket
+        //在服务端socket.id唯一标识一个用户
+        allrooms[room_id][socket.id] = socket;
     });
 
-    function part(channel) {
-        console.log("["+ socket.id + "] part ");
-
-        if (!(channel in socket.channels)) {
-            console.log("["+ socket.id + "] ERROR: not in ", channel);
-            return;
+    function leave(room_id) {
+        console.log("["+ socket.id + "] leave ");
+        if(room_id != socket.room_id){
+            console.log("error : room_id not match when a user leave[" + room_id + " | " + socket.room_id + "]");
         }
 
-        delete socket.channels[channel];
-        delete channels[channel][socket.id];
+        delete allrooms[room_id][socket.id];
 
-        for (id in channels[channel]) {
-            channels[channel][id].emit('removePeer', {'peer_id': socket.id});
-            socket.emit('removePeer', {'peer_id': id});
+        for (tmp_s_id in allrooms[room_id]) {
+            allrooms[room_id][tmp_s_id].emit('removePeer', {'peer_id': socket.id});
+            socket.emit('removePeer', {'peer_id': tmp_s_id});
         }
     }
 	
-    socket.on('part', part);
+    socket.on('leave', leave);
 
     socket.on('relayICECandidate', function(config) {
         var peer_id = config.peer_id;
