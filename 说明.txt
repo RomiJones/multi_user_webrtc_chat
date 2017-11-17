@@ -1,0 +1,12 @@
+chrome：
+新版本的webrtc使用需要Https，但是在内网开发调试时，要配置Https环境比较麻烦，哪有没有
+办法绕过https的限制呢?下面的方法是教你如何在http下使用webrtc
+1，点桌面上的Chrome图票，右键->属性，把目票输入框中的内容换成以下内容
+"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" --unsafely-treat-insecure-origin-as-secure="http://192.168.198.197:3100,http://ip:port" --user-data-dir=D:\temp
+把字符串中的ip:port换成你自己的服务器的ip加端口，本地目录换成你自己本地一个文件夹
+2，再重启chrome就可以了
+
+
+libcef:
+cefclient.exe --enable-media-stream --ignore-certificate-errors
+
