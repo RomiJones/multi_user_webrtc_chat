@@ -78,7 +78,9 @@ var theHandler = function (socket) {
             console.log("error : room_id not match when a user leave[" + room_id + " | " + socket.room_id + "]");
         }
 
-        delete allrooms[room_id][socket.id];
+        if(allrooms[room_id] != null && allrooms[room_id][socket.id] != null){
+            delete allrooms[room_id][socket.id];
+        }
 
         for (tmp_s_id in allrooms[room_id]) {
             allrooms[room_id][tmp_s_id].emit('removePeer', {'peer_id': socket.id});
