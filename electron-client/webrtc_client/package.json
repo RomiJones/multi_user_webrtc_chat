@@ -1,0 +1,13 @@
+{
+  "name": "webrtc_client",
+  "version": "0.0.1",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ./",
+	"build-win": "electron-packager . webrtc_client --platform=win32 --arch-ia32 --out ./OutApp --version 1.4.13 --overwrite --icon=./logo_in_win.ico",
+	"build-osx": "electron-packager . webrtc_client --platform=darwin --arch-x64 --out ./OutApp --version 1.4.13 --overwrite --icon=./logo_in_osx.icns"
+  },
+  "dependencies": {
+  
+  }
+}
