@@ -27,7 +27,7 @@
             var USE_VIDEO = true;
             var DEFAULT_ROOMID = '001';
             var MUTE_AUDIO_BY_DEFAULT = false;
-            var ICE_SERVERS = [{url:"stun:stun.softjoys.com:3478"}];
+            var ICE_SERVERS = [{url:"stun:sip1.lakedestiny.cordiaip.com"}];
 			var PC_CONFIGURATION = {"iceServers": ICE_SERVERS};
 			
             var PC_OPTIONAL = {"optional": [{"DtlsSrtpKeyAgreement": true}]}; /* this will no longer be needed by chrome
@@ -44,7 +44,6 @@
             function init() {
                 console.log("Connecting to signaling server");
                 signaling_socket = io(SIGNALING_SERVER);
-                //signaling_socket = io();
 
                 signaling_socket.on('connect', function() {
                     console.log("Connected to signaling server");
@@ -86,6 +85,7 @@
                     peers[peer_id] = peer_connection;
 
                     peer_connection.onicecandidate = function(event) {
+						console.log("peer_connection.onicecandidate callback", event.candidate);
                         if (event.candidate) {
                             signaling_socket.emit('relayICECandidate', {
                                 'peer_id': peer_id, 
@@ -188,6 +188,7 @@
                  * can begin trying to find the best path to one another on the net.
                  */
                 signaling_socket.on('iceCandidate', function(config) {
+					console.log("get ice candidate from other peer");
                     var peer = peers[config.peer_id];
                     var ice_candidate = config.ice_candidate;
                     peer.addIceCandidate(new RTCIceCandidate(ice_candidate));
