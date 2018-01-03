@@ -27,7 +27,7 @@
             var USE_VIDEO = true;
             var DEFAULT_ROOMID = '001';
             var MUTE_AUDIO_BY_DEFAULT = false;
-            var ICE_SERVERS = [{url:"stun:sip1.lakedestiny.cordiaip.com"}];
+            var ICE_SERVERS = [{url:"stun:stun.gmx.net"}];
 			var PC_CONFIGURATION = {"iceServers": ICE_SERVERS};
 			
             var PC_OPTIONAL = {"optional": [{"DtlsSrtpKeyAgreement": true}]}; /* this will no longer be needed by chrome
@@ -188,7 +188,7 @@
                  * can begin trying to find the best path to one another on the net.
                  */
                 signaling_socket.on('iceCandidate', function(config) {
-					console.log("get ice candidate from other peer");
+					console.log("get ice candidate from other peer", config.ice_candidate);
                     var peer = peers[config.peer_id];
                     var ice_candidate = config.ice_candidate;
                     peer.addIceCandidate(new RTCIceCandidate(ice_candidate));
