@@ -22,12 +22,12 @@
 			}
 		
 			//var SIGNALING_SERVER = pro_prefix + "192.168.0.120:" + server_port;
-            var SIGNALING_SERVER = pro_prefix + "192.168.198.197:" + server_port;
+            var SIGNALING_SERVER = pro_prefix + "180.76.117.121:" + server_port;
             var USE_AUDIO = true;
             var USE_VIDEO = true;
             var DEFAULT_ROOMID = '001';
             var MUTE_AUDIO_BY_DEFAULT = false;
-            var ICE_SERVERS = [{url:"stun:stun.l.google.com:19302"}];
+            var ICE_SERVERS = [{url:"stun:stun.softjoys.com:3478"}];
 			var PC_CONFIGURATION = {"iceServers": ICE_SERVERS};
 			
             var PC_OPTIONAL = {"optional": [{"DtlsSrtpKeyAgreement": true}]}; /* this will no longer be needed by chrome
@@ -81,8 +81,8 @@
                         console.log("Already connected to peer ", peer_id);
                         return;
                     }
-                    //var peer_connection = new RTCPeerConnection(PC_CONFIGURATION, PC_OPTIONAL);
-					var peer_connection = new RTCPeerConnection(null);
+                    var peer_connection = new RTCPeerConnection(PC_CONFIGURATION, PC_OPTIONAL);
+		    //var peer_connection = new RTCPeerConnection(null);
                     peers[peer_id] = peer_connection;
 
                     peer_connection.onicecandidate = function(event) {
