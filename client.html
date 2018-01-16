@@ -4,11 +4,11 @@
         <script src="/static/socket.io-1.4.5.js"></script>
 		<style>
             html, body { 
-                background-color: #333; 
+                background-color: #dddddd; 
             }
             video {
-                width:  320px;
-                height:  240px;
+                width:  640px;
+                height:  360px;
                 border:  1px solid black;
             }
         </style>
@@ -100,6 +100,7 @@
                         console.log("onAddStream", event);
                         var remote_media = USE_VIDEO ? $("<video>") : $("<audio>");
                         remote_media.attr("autoplay", "autoplay");
+						//remote_media.attr("controls", "true");
                         if (MUTE_AUDIO_BY_DEFAULT) {
                             remote_media.attr("muted", "true");
                         }
@@ -234,15 +235,25 @@
                 attachMediaStream = function(element, stream) {
                     element.srcObject = stream;
                  };
-
-                navigator.getUserMedia({"audio":USE_AUDIO, "video":USE_VIDEO},
+				 
+				 videoSupport = {
+						    'mandatory': {
+						        'maxWidth':  640,
+								'minWidth':  640,
+								'maxHeight': 360,
+						        'minHeight': 360,
+								"minFrameRate": 15
+						    },
+						    'optional': []
+						};
+                navigator.getUserMedia({audio:USE_AUDIO, video:videoSupport},
                     function(stream) {
                         local_media_stream = stream;		//storage the stream object
 						
 						//create a new video tag, appended to html body , and attached to stream object
                         var local_media = USE_VIDEO ? $("<video>") : $("<audio>");
 						local_media.attr("autoplay", "autoplay");
-                        local_media.attr("muted", "true"); 	// always mute ourselves by default
+                        //local_media.attr("muted", "true"); 	// always mute ourselves by default
                         //local_media.attr("controls", "");
                         $('body').append(local_media);
                         attachMediaStream(local_media[0], stream);
