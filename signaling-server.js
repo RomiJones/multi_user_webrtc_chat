@@ -16,8 +16,8 @@ httpServer.listen(HTTP_PORT, function(){
 });
 
 //----https server----
-var privateKey = fs.readFileSync('./tongbupan_new_ssl_private.key');
-var certificate = fs.readFileSync('./tongbupan1.crt');
+var privateKey = fs.readFileSync('./zs_pri.key');
+var certificate = fs.readFileSync('./zs_pub.crt');
 var credentials = {key: privateKey, cert: certificate};
 var httpsServer = require('https').createServer(credentials, app);
 httpsServer.listen(HTTPS_PORT, null, function() {

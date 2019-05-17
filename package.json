@@ -1,0 +1,21 @@
+{
+  "name": "multi_user_webrtc_chat",
+  "version": "1.0.0",
+  "description": "webrtc server based on nodejs, web client just support chrome at present",
+  "main": "signaling-server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "pm2 start ./signaling-server.js --name multi_user_webrtc_chat",
+    "dev":"node signaling-server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iamzengsheng/multi_user_webrtc_chat.git"
+  },
+  "author": "zengsheng",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/iamzengsheng/multi_user_webrtc_chat/issues"
+  },
+  "homepage": "https://github.com/iamzengsheng/multi_user_webrtc_chat#readme"
+}
