@@ -11,7 +11,7 @@ var app = express()
 
 //----http server----
 var httpServer = require("http").createServer(app);
-httpServer.listen(HTTP_PORT, function(){
+httpServer.listen(HTTP_PORT, "0.0.0.0", function(){
 	console.log("http listening on port " + HTTP_PORT);
 });
 
@@ -20,7 +20,7 @@ var privateKey = fs.readFileSync('./zs_pri.key');
 var certificate = fs.readFileSync('./zs_pub.crt');
 var credentials = {key: privateKey, cert: certificate};
 var httpsServer = require('https').createServer(credentials, app);
-httpsServer.listen(HTTPS_PORT, null, function() {
+httpsServer.listen(HTTPS_PORT, "0.0.0.0", function() {
     console.log("https listening on port " + HTTPS_PORT);
 });
 
