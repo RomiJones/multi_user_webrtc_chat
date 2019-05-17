@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "pm2 start ./signaling-server.js --name multi_user_webrtc_chat",
-    "dev":"node signaling-server.js"
+    "dev": "node signaling-server.js"
   },
   "repository": {
     "type": "git",
@@ -17,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/iamzengsheng/multi_user_webrtc_chat/issues"
   },
-  "homepage": "https://github.com/iamzengsheng/multi_user_webrtc_chat#readme"
+  "homepage": "https://github.com/iamzengsheng/multi_user_webrtc_chat#readme",
+  "dependencies": {
+    "socket.io": "^2.2.0"
+  }
 }

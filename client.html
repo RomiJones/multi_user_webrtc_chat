@@ -15,14 +15,14 @@
         <script>
 			//兼容http和https
 			var pro_prefix = "ws://";
-			var server_port = 3100;
+			var server_port = 13100;
 			if("https:" == document.location.protocol) {
 				pro_prefix = "wss://";
-				server_port = 3101;
+				server_port = 13101;
 			}
 		
 			//var SIGNALING_SERVER = pro_prefix + "192.168.0.120:" + server_port;
-            var SIGNALING_SERVER = pro_prefix + "private-svr-01.iamzengsheng.net:" + server_port;
+            var SIGNALING_SERVER = pro_prefix + "test-env.ifoodschain.com:" + server_port;
             var USE_AUDIO = true;
             var USE_VIDEO = true;
             var DEFAULT_ROOMID = '001';
